@@ -2,6 +2,7 @@ import ProductCard from "./components/ProductCard"
 import { productList } from "./data"
 
 
+
 const App= ()=>{
     const renderProductList=productList.map((product)=><ProductCard Iproduct={product} key={product.id} /> );
     return (
