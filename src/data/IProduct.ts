@@ -1,3 +1,5 @@
+import { IFormInput } from "./IFormInput";
+
 export interface IProduct {
     id: string;
     title: string;

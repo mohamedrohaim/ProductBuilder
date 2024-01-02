@@ -1,16 +1,35 @@
-import { useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import ProductCard from "./components/ProductCard"
 import Modal from "./components/ui/Modal";
 import Button from "./components/ui/Button";
 import Input from "./components/ui/Input";
 import { formInputsList } from "./data/IFormInput";
 import { productList } from "./data";
+import { IProduct } from "./data/IProduct";
 
 
 const App= ()=>{
 
     const [isOpen, setIsOpen] = useState(false);
+    const [product,setProduct]=useState<IProduct>({
+      title:'',
+      description:'',
+      imageURL:'',
+      price:'',
+      id:'',
+      colors:[],
+      category: {name:'',imageURL:''}
+    });
 
+    const onchangeHandeler=(event:ChangeEvent<HTMLInputElement>)=>{
+      const {name,value}=event.target
+      console.log(`${name} : ${value}`)
+      setProduct({...product,[name]:value})
+    }
+    console.log(product);
+   /*  useEffect(() => {
+      console.log(product);
+    }, [product]); */
 
     function closeModal() {
       setIsOpen(false)
@@ -21,12 +40,16 @@ const App= ()=>{
     } 
   
     const renderInputFormComponent=formInputsList.map((input)=>
-       <div className="flex flex-col">
+       <div className="flex flex-col" key={input.name}>
             <label className="block text-sm font-medium leading-6 text-gray-900">{input.label}</label>
-            <Input type={input.type}  name={input.name}  id={input.id}
+            <Input type={input.type}  name={input.name} 
+            id={input.id}
+            //key={input.name}
+            value={product[input.name]}
+            onChange={onchangeHandeler}
             className="shadow-md block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-/>
-        </div>
+  />
+        </div> 
     )
   
 
