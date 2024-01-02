@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import ProductCard from "./components/ProductCard"
 import Modal from "./components/ui/Modal";
 import Button from "./components/ui/Button";
@@ -23,13 +23,20 @@ const App= ()=>{
 
     const onchangeHandeler=(event:ChangeEvent<HTMLInputElement>)=>{
       const {name,value}=event.target
-      console.log(`${name} : ${value}`)
       setProduct({...product,[name]:value})
     }
-    console.log(product);
-   /*  useEffect(() => {
-      console.log(product);
-    }, [product]); */
+
+    const submitAddProductHandeler=(event:FormEvent<HTMLFormElement>)=>{
+      event.preventDefault();
+      product.colors.push(
+      "#A31ACB",
+      "#FF6E31",
+      "#3C2A21",)
+      product.category={name:"New Products",imageURL: product.imageURL}
+      productList.push(product);
+      closeModal();
+    }
+    
 
     function closeModal() {
       setIsOpen(false)
@@ -38,10 +45,11 @@ const App= ()=>{
     function openModal() {
       setIsOpen(true)
     } 
+
   
     const renderInputFormComponent=formInputsList.map((input)=>
        <div className="flex flex-col" key={input.name}>
-            <label className="block text-sm font-medium leading-6 text-gray-900">{input.label}</label>
+            <label className="block text-sm font-medium leading-6 text-gray-900" htmlFor={input.id}>{input.label}</label>
             <Input type={input.type}  name={input.name} 
             id={input.id}
             //key={input.name}
@@ -69,13 +77,24 @@ const App= ()=>{
     <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 p-2 rounded-md">
         {renderProductList}
         </div>
+        <form onSubmit={submitAddProductHandeler} id="add-product">
         <Modal isOpen={isOpen} closeModel={closeModal}  title="Create New Product Ya Negm :)">
             {renderInputFormComponent}
             <div className="flex justify-end space-x-2 mt-3 mb-2">
-            <Button className="bg-indigo-700 hover:bg-indigo-800" onClick={closeModal}>Cancel</Button>
-            <Button  className="bg-red-700 hover:bg-red-800" onClick={closeModal}>Submit</Button>
+            <Button className="bg-indigo-700 hover:bg-indigo-800 "
+             form="add-product"
+             type="reset"
+              onClick={closeModal}
+              >Cancel</Button>
+
+            <Button  className="bg-red-700 hover:bg-red-800 " 
+            form="add-product"
+             type="submit"
+               onClick={()=>console.log(product)}
+               >Submit</Button>
             </div>
         </Modal>
+        </form>
         </main>
 
     )
