@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import ProductCard from "./components/ProductCard"
 import Modal from "./components/ui/Modal";
@@ -6,28 +7,48 @@ import Input from "./components/ui/Input";
 import { formInputsList } from "./data/IFormInput";
 import { productList } from "./data";
 import { IProduct } from "./data/IProduct";
+import { validateInput } from "./validation";
+import ValidationMessage from "./components/ui/ValidationMessage";
 
 
 const App= ()=>{
 
+  const emptyProduct:IProduct={
+    title:'',
+    description:'',
+    imageURL:'',
+    price:'',
+    id:'',
+    colors:[],
+    category: {name:'',imageURL:''}
+  }
+
+  const initialValidationMsg={
+    title:'',
+    description:'',
+    imageURL:'',
+    price:'',
+  }
     const [isOpen, setIsOpen] = useState(false);
-    const [product,setProduct]=useState<IProduct>({
-      title:'',
-      description:'',
-      imageURL:'',
-      price:'',
-      id:'',
-      colors:[],
-      category: {name:'',imageURL:''}
-    });
+    const [product,setProduct]=useState<IProduct>(emptyProduct);
+    const [validation,setValidation]=useState(initialValidationMsg);
 
     const onchangeHandeler=(event:ChangeEvent<HTMLInputElement>)=>{
       const {name,value}=event.target
-      setProduct({...product,[name]:value})
+      setProduct({...product,[name]:value});
+      
+      setValidation({...validation,[name]:""});
     }
 
+    const validationErrors=validateInput(product)
+    const hasValidatioErrorMsg=Object.values(validationErrors).some(value=>value!=='')
     const submitAddProductHandeler=(event:FormEvent<HTMLFormElement>)=>{
       event.preventDefault();
+      if(hasValidatioErrorMsg){
+        setValidation(validationErrors);
+        console.log(validationErrors);
+      }else{
+      console.log("submited.........")
       product.colors.push(
       "#A31ACB",
       "#FF6E31",
@@ -35,11 +56,14 @@ const App= ()=>{
       product.category={name:"New Products",imageURL: product.imageURL}
       productList.push(product);
       closeModal();
+      }
     }
     
 
     function closeModal() {
-      setIsOpen(false)
+      setIsOpen(false);
+      setProduct(emptyProduct);
+      setValidation(initialValidationMsg)
     }
   
     function openModal() {
@@ -52,11 +76,12 @@ const App= ()=>{
             <label className="block text-sm font-medium leading-6 text-gray-900" htmlFor={input.id}>{input.label}</label>
             <Input type={input.type}  name={input.name} 
             id={input.id}
-            //key={input.name}
             value={product[input.name]}
             onChange={onchangeHandeler}
             className="shadow-md block w-full rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-  />
+            />
+            <ValidationMessage msg={validation[input.name]} />
+
         </div> 
     )
   
