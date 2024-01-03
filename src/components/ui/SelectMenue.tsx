@@ -15,7 +15,8 @@ function classNames(...classes: string[]) {
 
 const Select = ({ selected, setSelected }: IProps) => {
   return (
-    <Listbox value={selected} onChange={setSelected}>
+    <Listbox value={selected} 
+    onChange={setSelected}>
       {({ open }) => (
         <>
           <Listbox.Label className="block text-sm font-medium text-gray-900">Category</Listbox.Label>

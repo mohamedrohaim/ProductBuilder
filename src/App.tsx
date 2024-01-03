@@ -185,7 +185,8 @@ const App= ()=>{
         <Modal isOpen={isOpenEditModal} closeModel={closeModal}  title="Edit Product Ya Negm :)">
         <form onSubmit={submitEditProductHandeler} id="edit-product">
             {renderEditInputFormComponent}
-            <Select selected={productToEdit.category} setSelected={setSelected} />
+            <Select selected={productToEdit.category}
+             setSelected={(value)=>setProductToEdit({...productToEdit, category:value})} />
             <div className="block flex  space-x-3 h-9 items-center">
               {renderEditColorListComponent}
             </div>
